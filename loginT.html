@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+    <form action="loginT.php" method="POST">
+        <div class="login-box">
+            <img src="teacher.png">
+            <h2>Teacher Login</h2>
+
+            <h3>Teacher ID</h3>
+            <input type="text" name="idteach" placeholder="Enter your ID" required>
+
+            <h3>Password</h3>
+            <input type="password" name="password" placeholder="Enter your password" required>
+            <div class="form-group">
+    <label>
+        <input type="checkbox" name="remember"> تذكرني
+    </label>
+</div>
+
+            <br><br>
+            <button type="submit">Login</button>
+            <br>
+            <button><a href="index.php">Go to Home</a></button>
+
+        </div>
+    </form>
+
+</body>
+</html>
