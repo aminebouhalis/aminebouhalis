@@ -1,72 +1,108 @@
+<?php
+session_start();
+require 'connect.php';
+
+// التحقق من تسجيل الدخول كأستاذ
+if (!isset($_SESSION['teacher_id'])) {
+    die("لا تملك صلاحية الوصول لهذه الصفحة");
+}
+
+// جلب مواد الأستاذ
+$teacherId = $_SESSION['teacher_id'];
+$modulesQuery = $conn->prepare("
+    SELECT id_module, module 
+    FROM modules 
+    WHERE idT = ?
+    ORDER BY module
+");
+$modulesQuery->bind_param("i", $teacherId);
+$modulesQuery->execute();
+$modules = $modulesQuery->get_result();
+
+if (!$modules) {
+    die("خطأ في جلب بيانات المواد: " . $conn->error);
+}
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>EXAMS SPACE</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدخال العلامات</title>
     <style>
-        body, html {
-            height: 100%;
-            margin: 0;
+        body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
+            background-color: #f5f5f5;
+            padding: 20px;
         }
-
-        main.main-content {
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
             background: white;
-            padding: 20px 30px;
+            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
             text-align: center;
-            min-width: 280px;
-            max-width: 90vw;
-            width: 320px;
-        }
-
-        h2 {
             margin-bottom: 20px;
-            color: #333;
         }
-
-        a {
-            display: inline-block;
-            margin: 10px 15px;
-            padding: 10px 25px;
-            text-decoration: none;
-            background-color: #007bff;
+        form {
+            margin-top: 20px;
+        }
+        select, input, button {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
             color: white;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            margin-top: 10px;
         }
-
-        a:hover {
-            background-color: #0056b3;
+        button:hover {
+            background-color: #2980b9;
         }
-
-        @media (max-width: 400px) {
-            main.main-content {
-                width: 90vw;
-                padding: 15px 10px;
-            }
-
-            a {
-                display: block;
-                margin: 10px auto;
-                width: 80%;
-            }
+        .student-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .student-name {
+            flex: 2;
+        }
+        .student-mark {
+            flex: 1;
+            margin-left: 10px;
         }
     </style>
 </head>
 <body>
-    <main class="main-content" id="mainContent">
-        <h2>Exam Menu</h2>
-        <a href="Add.php">إدخال العلامات</a>
-        <a href="edit_marks.php">تعديل العلامات</a>
-        <a href="view_marks.php">عرض العلامات</a>
-    </main>
+    <div class="container">
+        <h1>إدخال العلامات</h1>
+        
+        <form method="post" action="enter_marks.php">
+            <label for="module">اختر المادة:</label>
+            <select name="module" id="module" required>
+                <option value="">-- اختر المادة --</option>
+                <?php while ($module = $modules->fetch_assoc()): ?>
+                    <option value="<?= $module['id_module'] ?>">
+                        <?= htmlspecialchars($module['module']) ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+            
+            <button type="submit">التالي</button>
+        </form>
+    </div>
 </body>
 </html>

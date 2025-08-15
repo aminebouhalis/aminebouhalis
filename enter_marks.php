@@ -11,7 +11,7 @@ if (!isset($_SESSION['teacher_id'])) {
 // التحقق من وجود المادة المحددة
 if (!isset($_POST['module'])) {
     $_SESSION['error'] = "لم يتم اختيار المادة";
-    header("Location: Add.php");
+    header("Location: Exams.php");
     exit();
 }
 
@@ -25,7 +25,7 @@ $moduleResult = $moduleQuery->get_result();
 
 if ($moduleResult->num_rows === 0) {
     $_SESSION['error'] = "المادة المحددة غير موجودة";
-    header("Location: Add.php");
+    header("Location: Exams.php");
     exit();
 }
 
@@ -53,7 +53,7 @@ if (!$students) {
 
 if ($students->num_rows === 0) {
     $_SESSION['error'] = "لا يوجد طلاب مسجلين في هذه المادة";
-    header("Location: Add.php");
+    header("Location: Exams.php");
     exit();
 }
 ?>

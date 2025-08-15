@@ -1,8 +1,8 @@
 <?php
-$host = "sql309.infinityfree.com";
-$username = "if0_39647801";
-$password = "${{ secrets.FTP_PASSWORD }}";
-$database = "if0_39647801_DepartementCS";
+$host = "localhost";
+$username ="root";
+$password ="bac202313.31";
+$database ="departementinfo";
 
 // تفعيل الإبلاغ عن الأخطاء
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);

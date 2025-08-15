@@ -43,10 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['marks'])) {
         $_SESSION['error'] = "حدث خطأ أثناء الحفظ: " . $e->getMessage();
     }
     
-    header("Location: Add.php");
+    header("Location: Exams.php");
     exit();
 } else {
-    header("Location: Add.php");
+    header("Location: Exams.php");
     exit();
 }
 ?>
