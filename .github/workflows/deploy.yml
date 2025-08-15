@@ -19,3 +19,6 @@ jobs:
           username: if0_39647801
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /htdocs/
+          exclude: |
+            connect.php
+            **/connect.php
