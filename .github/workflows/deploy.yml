@@ -18,8 +18,7 @@ jobs:
           server: ftpupload.net
           username: if0_39647801
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /htdocs/
+          server-dir: /departementcomputersciences.free.nf/htdocs/
           exclude: |
             connect.php
             **/connect.php
-.github/workflows/deploy.yml
