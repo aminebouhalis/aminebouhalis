@@ -97,7 +97,7 @@ if (isset($_COOKIE['teacher_id']) && isset($_COOKIE['teacher_token'])) {
     <a href="https://www.facebook.com/FST.Univ.Relizane">Official Facebook page of our Faculty</a>
     <a href="https://www.facebook.com/relizane.uni">Official Facebook page of our University</a>
     <a href="https://univ-relizane.dz/">Website of university</a>
-    <a href="https://elearning.univ-relizane.dz/">Platform Moodle Relizane</a>
+    
   </footer>
  </body>
 </html>
