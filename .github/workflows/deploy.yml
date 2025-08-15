@@ -22,3 +22,4 @@ jobs:
           exclude: |
             connect.php
             **/connect.php
+.github/workflows/deploy.yml
