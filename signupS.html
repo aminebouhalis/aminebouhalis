@@ -43,5 +43,62 @@
             </form>
               <br><button><a href="index.php">Go to home</a></button>
       </div>
+     <script type="module">
+  // استيراد مكتبات Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } 
+    from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+
+  // إعدادات مشروعك (انسخها من Firebase Console)
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "SENDER_ID",
+    appId: "APP_ID"
+  };
+
+  // تهيئة Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // 🔹 عند الضغط على زر التسجيل
+  const form = document.querySelector("form");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault(); // منع الإرسال المباشر
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("pass").value;
+    const confirm = document.getElementById("cpass").value;
+
+    if (password !== confirm) {
+      alert("كلمة المرور غير متطابقة");
+      return;
+    }
+
+    try {
+      // إنشاء حساب على Firebase
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // إرسال باقي البيانات لـ PHP + UID من Firebase
+      const formData = new FormData(form);
+      formData.append("uid", user.uid);
+
+      const response = await fetch("signupS.php", {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await response.text();
+      alert("تم إنشاء الحساب ✔️\n" + result);
+
+
+    } catch (error) {
+      alert("خطأ: " + error.message);
+    }
+  });
+</script>
   </body>
 </html>
