@@ -99,5 +99,26 @@ if (isset($_COOKIE['teacher_id']) && isset($_COOKIE['teacher_token'])) {
     <a href="https://univ-relizane.dz/">Website of university</a>
     
   </footer>
+       // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBQf_tjUTzUs688js-Runv6eawj4Hv2FWk",
+  authDomain: "department-computer-science.firebaseapp.com",
+  projectId: "department-computer-science",
+  storageBucket: "department-computer-science.firebasestorage.app",
+  messagingSenderId: "189934401736",
+  appId: "1:189934401736:web:9bdc4d2e39fa83b4900dfd",
+  measurementId: "G-SP2P9WT486"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
  </body>
 </html>
