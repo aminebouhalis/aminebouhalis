@@ -22,3 +22,5 @@ jobs:
           exclude: |
             connect.php
             **/connect.php
+             .git*
+            **/.git*
