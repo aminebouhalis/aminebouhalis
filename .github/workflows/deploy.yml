@@ -20,5 +20,5 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /departementcomputersciences.free.nf/htdocs/
           exclude: |
-            connect.php
-            **/connect.php
+            
+            
