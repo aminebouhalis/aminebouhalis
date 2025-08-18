@@ -76,6 +76,29 @@ if (isset($_COOKIE['teacher_id']) && isset($_COOKIE['teacher_token'])) {
     </center>
  </header>
    <body>
+    <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBQf_tjUTzUs688js-Runv6eawj4Hv2FWk",
+    authDomain: "department-computer-science.firebaseapp.com",
+    projectId: "department-computer-science",
+    storageBucket: "department-computer-science.firebasestorage.app",
+    messagingSenderId: "189934401736",
+    appId: "1:189934401736:web:9bdc4d2e39fa83b4900dfd",
+    measurementId: "G-SP2P9WT486"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
     <center>
       <h1> Welcome to our  web site </h1>
       <p><span style="color: deeppink;">SELECT YOUR CATAGORY </span></p>
