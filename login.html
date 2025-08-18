@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
   <title>Student Login</title>
@@ -9,18 +9,18 @@
       from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
     // إعدادات Firebase
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
+  const firebaseConfig = {
+  apiKey: "AIzaSyBQf_tjUTzUs688js-Runv6eawj4Hv2FWk",
+  authDomain: "department-computer-science.firebaseapp.com",
+  projectId: "department-computer-science",
+  storageBucket: "department-computer-science.firebasestorage.app",
+  messagingSenderId: "189934401736",
+  appId: "1:189934401736:web:9bdc4d2e39fa83b4900dfd",
+  measurementId: "G-SP2P9WT486"
+};
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // التعامل مع الفورم
     window.addEventListener("DOMContentLoaded", () => {
       const form = document.getElementById("loginForm");
       form.addEventListener("submit", async (e) => {
@@ -33,7 +33,13 @@
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           const user = userCredential.user;
 
-          // نرسل UID أو Email لـ PHP للتحقق من بيانات الطالب
+          // ✅ التحقق من تفعيل البريد الإلكتروني
+          if (!user.emailVerified) {
+            alert("يرجى تفعيل بريدك الإلكتروني أولاً عبر الرابط المرسل إليك.");
+            return;
+          }
+
+          // إرسال UID و Email للـ PHP
           const formData = new FormData();
           formData.append("uid", user.uid);
           formData.append("email", user.email);
@@ -62,10 +68,8 @@
       <h2>Student LOG IN</h2>
       <h3>Email</h3>
       <input type="email" id="email" placeholder="Enter your Email" required>
-
       <h3>Password</h3>
       <input type="password" id="password" placeholder="Enter your password" required>
-
       <br><br>
       <button type="submit">Login</button>
     </div>

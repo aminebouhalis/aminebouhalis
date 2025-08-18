@@ -3,7 +3,7 @@ session_start();
 include('connect.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // الحقول المطلوبة
+    // التحقق من الحقول المطلوبة
     $required_fields = ['bacyear', 'id', 'user', 'email', 'current_level', 'uid'];
     foreach ($required_fields as $field) {
         if (empty($_POST[$field])) {
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // 3. تحديث بيانات الطالب (بدون كلمة سر لأن Firebase مسؤول عنها)
+    // 3. تحديث بيانات الطالب
     $update = $conn->prepare("UPDATE students SET 
                                 fullName = ?,
                                 email = ?,
@@ -52,12 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 yearBac = ?,
                                 current_level = ?
                               WHERE registerNumber = ?");
-
     $update->bind_param("ssssss", $username, $email, $firebase_uid, $yearBac, $current_level, $registerNumber);
     $done = $update->execute();
 
     if ($done) {
-        $_SESSION["success"] = "تم إنشاء الحساب بنجاح باستخدام Firebase! يمكنك الآن تسجيل الدخول.";
+        $_SESSION["success"] = "تم إنشاء الحساب بنجاح باستخدام Firebase! تحقق من بريدك الإلكتروني قبل تسجيل الدخول.";
         header("Location: login.html");
         exit();
     } else {

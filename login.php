@@ -6,7 +6,6 @@ if (isset($_POST['uid']) && isset($_POST['email'])) {
     $uid = mysqli_real_escape_string($conn, $_POST['uid']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
 
-    // نبحث عن الطالب حسب uid أو email
     $query = "SELECT * FROM students WHERE firebase_uid = ? OR email = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("ss", $uid, $email);
@@ -20,7 +19,7 @@ if (isset($_POST['uid']) && isset($_POST['email'])) {
         $_SESSION['loggedin'] = true;
         $_SESSION['user_type'] = 'student';
 
-        echo "success"; // يلتقطها JavaScript ويوجه للصفحة
+        echo "success";
     } else {
         echo "لم يتم العثور على الطالب في قاعدة البيانات.";
     }
