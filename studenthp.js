@@ -110,10 +110,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const title = link.textContent.trim();
         });
     });
-    
-           
-          
-    
 
 document.addEventListener('DOMContentLoaded', function() {
     // إخفاء جميع المحتويات عند البدء
@@ -130,6 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function hideAllSections() {
+    
     document.querySelector('.welcome-content').style.display = 'none';
     document.querySelector('.grades-section').style.display = 'none';
     // يمكنك إضافة أقسام أخرى هنا عند الحاجة
@@ -204,3 +201,5 @@ function showNoGradesMessage(message) {
         </div>
     `;
 }
+
+

@@ -44,7 +44,7 @@ $studentName = $_SESSION['studentName'];
         <div class="block"><a href="#">Assessment</a></div>
         <div class="block"><a href="#">Section & Group</a></div>
         <div class="block"><a href="#">Time Tables</a></div>
-        <div class="block"><a href="#">Semi-Annual Deliberation</a></div>
+        <div class="block"><a href="">Semi-Annual Deliberation</a></div>
       </div>
     </aside>
 
