@@ -1,15 +1,10 @@
-
 <?php
 session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 include('connect.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
-    // التحقق من وجود جميع الحقول المطلوبة
-    $required_fields = ['bacyear', 'id', 'user', 'email', 'pass', 'cpass', 'current_level'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // الحقول المطلوبة
+    $required_fields = ['bacyear', 'id', 'user', 'email', 'current_level', 'uid'];
     foreach ($required_fields as $field) {
         if (empty($_POST[$field])) {
             $_SESSION["error"] = "جميع الحقول مطلوبة";
@@ -18,14 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         }
     }
 
-    // تنظيف البيانات المدخلة
     $yearBac = mysqli_real_escape_string($conn, $_POST['bacyear']);
     $registerNumber = mysqli_real_escape_string($conn, $_POST['id']);
     $username = mysqli_real_escape_string($conn, $_POST['user']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = $_POST['pass']; // لا نستخدم mysqli_real_escape_string على كلمة المرور قبل التشفير
     $current_level = mysqli_real_escape_string($conn, $_POST['current_level']);
-    $cpassword = $_POST['cpass'];
+    $firebase_uid = mysqli_real_escape_string($conn, $_POST['uid']); // UID من Firebase
 
     // 1. التحقق من وجود الطالب برقم التسجيل
     $check_id = $conn->prepare("SELECT * FROM students WHERE registerNumber = ?");
@@ -39,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         exit();
     }
 
-    // 2. التحقق من البريد الإلكتروني المكرر (باستثناء الطالب الحالي)
+    // 2. التحقق من البريد الإلكتروني المكرر
     $check_email = $conn->prepare("SELECT * FROM students WHERE email = ? AND registerNumber != ?");
     $check_email->bind_param("ss", $email, $registerNumber);
     $check_email->execute();
@@ -51,37 +44,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         exit();
     }
 
-    // 3. التحقق من تطابق كلمة المرور
-    if ($password !== $cpassword) {
-        $_SESSION["error"] = "كلمتا المرور غير متطابقتين.";
-        header("Location: signupS.html");
-        exit();
-    }
-
-    // 4. التحقق من قوة كلمة المرور (إضافة اختيارية)
-    if (strlen($password) < 8) {
-        $_SESSION["error"] = "كلمة المرور يجب أن تكون 8 أحرف على الأقل.";
-        header("Location: signupS.html");
-        exit();
-    }
-
-    // 5. تشفير كلمة المرور
-    $hash = password_hash($password, PASSWORD_DEFAULT);
-
-    // 6. تحديث بيانات الطالب باستخدام Prepared Statements
+    // 3. تحديث بيانات الطالب (بدون كلمة سر لأن Firebase مسؤول عنها)
     $update = $conn->prepare("UPDATE students SET 
-                            fullName = ?,
-                            email = ?,
-                            password = ?,
-                            yearBac = ?,
-                            current_level = ?
-                          WHERE registerNumber = ?");
+                                fullName = ?,
+                                email = ?,
+                                firebase_uid = ?,
+                                yearBac = ?,
+                                current_level = ?
+                              WHERE registerNumber = ?");
 
-    $update->bind_param("ssssss", $username, $email, $hash, $yearBac, $current_level, $registerNumber);
+    $update->bind_param("ssssss", $username, $email, $firebase_uid, $yearBac, $current_level, $registerNumber);
     $done = $update->execute();
 
     if ($done) {
-        $_SESSION["success"] = "تم تحديث بيانات الحساب بنجاح! يمكنك الآن تسجيل الدخول.";
+        $_SESSION["success"] = "تم إنشاء الحساب بنجاح باستخدام Firebase! يمكنك الآن تسجيل الدخول.";
         header("Location: login.html");
         exit();
     } else {
