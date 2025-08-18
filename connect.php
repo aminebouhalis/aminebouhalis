@@ -1,8 +1,8 @@
 <?php
-$host = "localhost";
-$username ="root";
-$password ="bac202313.31";
-$database ="departementinfo";
+$host = "sql309.infinityfree.com";
+$username =" if0_39647801";
+$password ="bac20231331";
+$database ="if0_39647801_DepartementCS   ";
 
 // تفعيل الإبلاغ عن الأخطاء
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
