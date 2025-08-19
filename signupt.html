@@ -23,6 +23,72 @@
   </head>
 
   <body>
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    sendEmailVerification 
+  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+
+  // إعدادات Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBQf_tjUTzUs688js-Runv6eawj4Hv2FWk",
+    authDomain: "department-computer-science.firebaseapp.com",
+    projectId: "department-computer-science",
+    storageBucket: "department-computer-science.firebasestorage.app",
+    messagingSenderId: "189934401736",
+    appId: "1:189934401736:web:9bdc4d2e39fa83b4900dfd",
+    measurementId: "G-SP2P9WT486"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const form = document.getElementById("signupForm");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("pass").value;
+    const confirm = document.getElementById("cpass").value;
+
+    if (password !== confirm) {
+      alert("كلمة المرور غير متطابقة");
+      return;
+    }
+
+    try {
+      // إنشاء الحساب
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // إرسال رابط تحقق البريد
+      await sendEmailVerification(user);
+
+      // إرسال البيانات للـ PHP
+      const formData = new FormData(form);
+      formData.append("uid", user.uid);
+
+      const response = await fetch("signupT.php", {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await response.json(); // ⬅️ JSON بدلاً من text()
+
+      alert(result.message);
+
+      if (result.status === "success") {
+        // إعادة التوجيه بعد النجاح
+        window.location.href = "loginT.html";
+      }
+
+    } catch (error) {
+      alert("خطأ: " + error.message);
+    }
+  });
+</script>
     <div id="form">
       <h1 id="heading">Teacher SignUp</h1><br>
       <form id="signupForm" method="POST">
@@ -42,66 +108,5 @@
       <br>
       <button><a href="index.php">Go to home</a></button>
     </div>
-
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-      import { 
-        getAuth, 
-        createUserWithEmailAndPassword, 
-        sendEmailVerification 
-      } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-
-      // إعدادات Firebase
-      const firebaseConfig = {
-  apiKey: "AIzaSyBQf_tjUTzUs688js-Runv6eawj4Hv2FWk",
-  authDomain: "department-computer-science.firebaseapp.com",
-  projectId: "department-computer-science",
-  storageBucket: "department-computer-science.firebasestorage.app",
-  messagingSenderId: "189934401736",
-  appId: "1:189934401736:web:9bdc4d2e39fa83b4900dfd",
-  measurementId: "G-SP2P9WT486"
-};
-
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-
-      const form = document.getElementById("signupForm");
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("pass").value;
-        const confirm = document.getElementById("cpass").value;
-
-        if (password !== confirm) {
-          alert("كلمة المرور غير متطابقة");
-          return;
-        }
-
-        try {
-          // إنشاء الحساب
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-          const user = userCredential.user;
-
-          // إرسال رابط تحقق البريد
-          await sendEmailVerification(user);
-
-          // إرسال البيانات للـ PHP
-          const formData = new FormData(form);
-          formData.append("uid", user.uid);
-
-          const response = await fetch("signupT.php", {
-            method: "POST",
-            body: formData
-          });
-
-          const result = await response.text();
-          alert("تم إنشاء الحساب ✔️ تحقق من بريدك الإلكتروني.\n" + result);
-
-        } catch (error) {
-          alert("خطأ: " + error.message);
-        }
-      });
-    </script>
   </body>
 </html>
