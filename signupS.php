@@ -39,13 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $check_email = $conn->prepare("SELECT email FROM students WHERE email = ? AND registerNumber != ?");
     $check_email->bind_param("ss", $email, $registerNumber);
     $check_email->execute();
-    $check_email->store_result();
-
-    if ($check_email->num_rows > 0) {
-        echo json_encode([
-            "status" => "error",
-            "message" => "البريد الإلكتروني مستخدم بالفعل من قبل طالب آخر."
-        ]);
+    $res_email = $check_email->get_result();
+  if ($res_email->num_rows > 0) {
+        $_SESSION["error"] = "البريد الإلكتروني مستخدم من قبل طالب آخر.";
+        header("Location: signupS.html");
         exit();
     }
 
@@ -60,22 +57,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $update->bind_param("ssssss", $username, $email, $firebase_uid, $yearBac, $current_level, $registerNumber);
     $done = $update->execute();
 
-    if ($done) {
-        echo json_encode([
-            "status" => "success",
-            "message" => "تم إنشاء الحساب بنجاح! تحقق من بريدك الإلكتروني قبل تسجيل الدخول."
-        ]);
+   if ($done) {
+        echo json_encode(["status" => "success", "message" => "تم إنشاء الحساب بنجاح! تحقق من بريدك الإلكتروني قبل تسجيل الدخول."]);
     } else {
-        echo json_encode([
-            "status" => "error",
-            "message" => "خطأ أثناء تحديث الحساب: " . $update->error
-        ]);
+        echo json_encode(["status" => "error", "message" => "حدث خطأ أثناء تحديث الحساب: " . $conn->error]);
     }
     exit();
 } else {
-    echo json_encode([
-        "status" => "error",
-        "message" => "الطلب غير صحيح."
-    ]);
+    echo json_encode(["status" => "error", "message" => "الطلب غير صحيح."]);
     exit();
 }
