@@ -1,131 +1,95 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="ar">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SignUp Page</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-    <style>
-      .form-group { margin-bottom: 15px; }
-      label { display: block; margin-bottom: 5px; }
-      input, select { width: 100%; padding: 8px; }
-      .error { color: red; }
-      #form {
-        width: 400px;
-        margin: 30px auto;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 0px 8px #ccc;
-      }
-      #heading {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="utf-8">
+  <title>SignUp Page</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    #form { width: 400px; margin: 30px auto; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 8px #ccc; }
+    #heading { text-align: center; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <div id="form">
+    <h1 id="heading">SignUp Form</h1>
+    <form id="signupForm">
+      <input type="text" name="user" placeholder="Enter Username" required><br><br>
+      <select name="current_level" required>
+        <option value="">اختر المستوى</option>
+        <option value="L1">L1</option>
+        <option value="L2">L2</option>
+        <option value="L3">L3</option>
+        <option value="M1">M1</option>
+        <option value="M2">M2</option>
+      </select><br><br>
+      <input type="date" name="bacyear" required><br><br>
+      <input type="number" name="id" placeholder="رقم تسجيل البكالوريا" required><br><br>
+      <input type="email" id="email" name="email" placeholder="Email" required><br><br>
+      <input type="password" id="pass" name="pass" placeholder="Password" required><br><br>
+      <input type="password" id="cpass" name="cpass" placeholder="Confirm Password" required><br><br>
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
 
-  <body>
-    <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-  import { 
-    getAuth, 
-    createUserWithEmailAndPassword, 
-    sendEmailVerification 
-  } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
-  // إعدادات Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyBQf_tjUTzUs688js-Runv6eawj4Hv2FWk",
-    authDomain: "department-computer-science.firebaseapp.com",
-    projectId: "department-computer-science",
-    storageBucket: "department-computer-science.firebasestorage.app",
-    messagingSenderId: "189934401736",
-    appId: "1:189934401736:web:9bdc4d2e39fa83b4900dfd",
-    measurementId: "G-SP2P9WT486"
-  };
+    // إعدادات Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQf_tjUTzUs688js-Runv6eawj4Hv2FWk",
+      authDomain: "department-computer-science.firebaseapp.com",
+      projectId: "department-computer-science",
+      storageBucket: "department-computer-science.firebasestorage.app",
+      messagingSenderId: "189934401736",
+      appId: "1:189934401736:web:9bdc4d2e39fa83b4900dfd"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-  const form = document.getElementById("signupForm");
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("pass").value;
-    const confirm = document.getElementById("cpass").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("pass").value;
+      const confirm = document.getElementById("cpass").value;
 
-    if (password !== confirm) {
-      alert("كلمة المرور غير متطابقة");
-      return;
-    }
-
-    try {
-      // إنشاء الحساب
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // إرسال رابط تحقق البريد
-      await sendEmailVerification(user);
-
-      // إرسال البيانات للـ PHP
-      const formData = new FormData(form);
-      formData.append("uid", user.uid);
-
-      const response = await fetch("signupT.php", {
-        method: "POST",
-        body: formData
-      });
-
-      const result = await response.json(); // ⬅️ JSON بدلاً من text()
-
-      alert(result.message);
-
-      if (result.status === "success") {
-        // إعادة التوجيه بعد النجاح
-        window.location.href = "loginT.html";
+      if (password !== confirm) {
+        alert("كلمة المرور غير متطابقة");
+        return;
       }
 
-    } catch (error) {
-      alert("خطأ: " + error.message);
-    }
-  });
-</script>
+      try {
+        // إنشاء الحساب على Firebase
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
-    <div id="form">
-      <h1 id="heading">SignUp Form</h1><br>
-      <form id="signupForm" method="POST">
-        <i class="fa fa-user fa-lg"></i>
-        <input type="text" id="user" name="user" placeholder="Enter Username" required><br><br>
+        // إرسال رابط تحقق
+        await sendEmailVerification(user);
 
-        <div class="form-group">
-          <label>المستوى الحالي:</label>
-          <select name="current_level" required>
-            <option value="L1"> (L1)</option>
-            <option value="L2">(L2)</option>
-            <option value="L3">(L3)</option>
-            <option value="M1"> (M1)</option>
-            <option value="M2">(M2)</option>
-          </select>
-        </div>
+        // تجهيز بيانات الإرسال إلى PHP
+        const form = document.getElementById("signupForm");
+        const formData = new FormData(form);
+        formData.append("uid", user.uid);
 
-        <input type="date" id="bacyear" name="bacyear" required><br><br>
-        <input type="number" name="id" id="id" placeholder="Insert your registr number of bac" required><br><br>
+        const response = await fetch("signupS.php", {
+          method: "POST",
+          body: formData
+        });
 
-        <i class="fa-solid fa-envelope fa-lg"></i>
-        <input type="email" id="email" name="email" placeholder="Enter Email" required><br><br>
+        const result = await response.json();
 
-        <i class="fa-solid fa-lock fa-lg"></i>
-        <input type="password" id="pass" name="pass" placeholder="Create Password" required><br><br>
+        alert(result.message);
 
-        <i class="fa-solid fa-lock fa-lg"></i>
-        <input type="password" id="cpass" name="cpass" placeholder="Retype Password" required><br><br>
+        if (result.status === "success") {
+          window.location.href = "login.html";
+        }
 
-        <input type="submit" id="btn" value="SignUp"/>
-      </form>
-      <br>
-      <button><a href="index.php">Go to home</a></button>
-    </div>
-  </body>
+      } catch (error) {
+        alert("خطأ: " + error.message);
+      }
+    });
+  </script>
+</body>
 </html>
