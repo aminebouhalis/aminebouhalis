@@ -2,6 +2,8 @@
 session_start();
 include('connect.php');
 
+header('Content-Type: application/json; charset=utf-8');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // التحقق من الحقول المطلوبة
     $required_fields = ['bacyear', 'id', 'user', 'email', 'current_level', 'uid'];
@@ -54,18 +56,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               WHERE registerNumber = ?");
     $update->bind_param("ssssss", $username, $email, $firebase_uid, $yearBac, $current_level, $registerNumber);
     $done = $update->execute();
-
-    if ($done) {
-        $_SESSION["success"] = "تم إنشاء الحساب بنجاح باستخدام Firebase! تحقق من بريدك الإلكتروني قبل تسجيل الدخول.";
-        header("Location: login.html");
-        exit();
+  if ($done) {
+        echo json_encode(["status" => "success", "message" => "تم إنشاء الحساب بنجاح! تحقق من بريدك الإلكتروني قبل تسجيل الدخول."]);
     } else {
-        $_SESSION["error"] = "حدث خطأ أثناء تحديث الحساب: " . $conn->error;
-        header("Location: signupS.html");
-        exit();
+        echo json_encode(["status" => "error", "message" => "حدث خطأ أثناء تحديث الحساب: " . $conn->error]);
     }
+    exit();
 } else {
-    $_SESSION["error"] = "الطلب غير صحيح.";
-    header("Location: signupS.html");
+    echo json_encode(["status" => "error", "message" => "الطلب غير صحيح."]);
     exit();
 }
+   

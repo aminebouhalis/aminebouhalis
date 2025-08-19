@@ -2,6 +2,7 @@
 session_start();
 include('connect.php');
 
+header('Content-Type: application/json; charset=utf-8');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idteach   = mysqli_real_escape_string($conn, $_POST['idteach']);
     $name      = mysqli_real_escape_string($conn, $_POST['name']);
@@ -44,18 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               WHERE idteach = ?");
     $update->bind_param("ssssss", $name, $hiredate, $email, $phone, $firebase_uid, $idteach);
     $done = $update->execute();
-
-    if ($done) {
-        $_SESSION["success"] = "تم إنشاء الحساب بنجاح! تحقق من بريدك الإلكتروني قبل تسجيل الدخول.";
-        header("Location: loginT.html");
-        exit();
+      if ($done) {
+        echo json_encode(["status" => "success", "message" => "تم إنشاء الحساب بنجاح! تحقق من بريدك الإلكتروني قبل تسجيل الدخول."]);
     } else {
-        $_SESSION["error"] = "حدث خطأ أثناء تحديث الحساب: " . $conn->error;
-        header("Location: signupT.html");
-        exit();
+        echo json_encode(["status" => "error", "message" => "حدث خطأ أثناء تحديث الحساب: " . $conn->error]);
     }
+    exit();
 } else {
-    $_SESSION["error"] = "الطلب غير صحيح.";
-    header("Location: signupT.html");
+    echo json_encode(["status" => "error", "message" => "الطلب غير صحيح."]);
     exit();
 }
